@@ -19,12 +19,17 @@ spec:
       - name: web
         image: acrdreastus2poc.azurecr.io/ecommerce-app:v1.0.0
         imagePullPolicy: IfNotPresent
+        command: ["node", "/app/app.js"]
         ports:
         - containerPort: 8080
           name: http
         envFrom:
         - configMapRef:
             name: ecommerce-config
+        volumeMounts:
+        - name: app-code
+          mountPath: /app/app.js
+          subPath: app.js
         resources:
           requests:
             cpu: 100m
@@ -44,3 +49,7 @@ spec:
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 5
+      volumes:
+      - name: app-code
+        configMap:
+          name: ecommerce-app-code

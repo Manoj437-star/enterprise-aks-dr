@@ -35,7 +35,7 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "node_not_ready" {
     query                   = <<-QUERY
       KubeNodeInventory
       | where Status == "NotReady"
-      | summarize AggregatedValue = count() by Node, bin(TimeGenerated, 1m)
+      | summarize AggregatedValue = count() by Computer, bin(TimeGenerated, 1m)
     QUERY
     time_aggregation_method = "Count"
     threshold               = 2

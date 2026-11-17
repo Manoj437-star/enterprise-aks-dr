@@ -1,6 +1,6 @@
-const express = require('express');
+const http = require('http');
 const os = require('os');
-const app = express();
+const url = require('url');
 
 const PORT = process.env.PORT || 8080;
 const REGION = process.env.REGION || 'East US 2 (Primary)';
@@ -15,43 +15,51 @@ const products = [
   { id: 4, name: 'Noise-Cancelling DevOps Headset', price: 199.99, stock: 65 }
 ];
 
-// Health Probes for AKS and Front Door
-app.get('/healthz', (req, res) => {
-  res.status(200).json({ status: 'HEALTHY', region: REGION, timestamp: new Date().toISOString() });
-});
+const server = http.createServer((req, res) => {
+  const parsedUrl = url.parse(req.url, true);
+  const pathname = parsedUrl.pathname;
 
-app.get('/readyz', (req, res) => {
-  res.status(200).json({ status: 'READY', region: REGION });
-});
+  // Health Probes for AKS and Front Door
+  if (pathname === '/healthz') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ status: 'HEALTHY', region: REGION, timestamp: new Date().toISOString() }));
+  }
 
-app.get('/livez', (req, res) => {
-  res.status(200).json({ status: 'ALIVE', region: REGION });
-});
+  if (pathname === '/readyz') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ status: 'READY', region: REGION }));
+  }
 
-app.get('/version', (req, res) => {
-  res.status(200).json({
-    version: APP_VERSION,
-    region: REGION,
-    hostname: os.hostname(),
-    uptimeSeconds: Math.floor((new Date() - startTime) / 1000)
-  });
-});
+  if (pathname === '/livez') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ status: 'ALIVE', region: REGION }));
+  }
 
-app.get('/api/products', (req, res) => {
-  res.status(200).json({
-    region: REGION,
-    total: products.length,
-    data: products
-  });
-});
+  if (pathname === '/version') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({
+      version: APP_VERSION,
+      region: REGION,
+      hostname: os.hostname(),
+      uptimeSeconds: Math.floor((new Date() - startTime) / 1000)
+    }));
+  }
 
-// Homepage UI
-app.get('/', (req, res) => {
-  const isPrimary = REGION.toLowerCase().includes('east');
-  const bannerColor = isPrimary ? '#0078D4' : '#107C41';
-  const regionBadge = isPrimary ? 'PRIMARY ACTIVE' : 'SECONDARY WARM STANDBY';
+  if (pathname === '/api/products') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({
+      region: REGION,
+      total: products.length,
+      data: products
+    }));
+  }
 
-  const html = `<!DOCTYPE html>
+  if (pathname === '/' || pathname === '/index.html') {
+    const isPrimary = REGION.toLowerCase().includes('east');
+    const bannerColor = isPrimary ? '#0078D4' : '#107C41';
+    const regionBadge = isPrimary ? 'PRIMARY ACTIVE' : 'SECONDARY WARM STANDBY';
+
+    const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -102,9 +110,14 @@ app.get('/', (req, res) => {
   </div>
 </body>
 </html>`;
-  res.send(html);
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    return res.end(html);
+  }
+
+  res.writeHead(404, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({ error: 'Not Found', path: pathname }));
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`CloudStore E-Commerce server running on port ${PORT} [Region: ${REGION}]`);
 });

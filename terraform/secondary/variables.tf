@@ -25,7 +25,7 @@ variable "cluster_name" {
 variable "vm_size" {
   type        = string
   description = "VM SKU for the worker nodes"
-  default     = "Standard_B2s"
+  default     = "Standard_D2s_v6"
 }
 
 variable "node_count" {
