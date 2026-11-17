@@ -1,0 +1,45 @@
+{
+  "location": "eastus2",
+  "tags": {
+    "Environment": "POC",
+    "ChaosTarget": "AKS-Node"
+  },
+  "properties": {
+    "steps": [
+      {
+        "name": "Step1-SimulateNodeFailure",
+        "branches": [
+          {
+            "name": "Branch1-StopVMSSInstance",
+            "actions": [
+              {
+                "type": "continuous",
+                "name": "urn:csci:microsoft:virtualMachineScaleSet:shutdown/1.0",
+                "duration": "PT5M",
+                "parameters": [
+                  {
+                    "key": "abruptShutdown",
+                    "value": "true"
+                  }
+                ],
+                "selectorId": "Selector-NodePool"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "selectors": [
+      {
+        "id": "Selector-NodePool",
+        "type": "List",
+        "targets": [
+          {
+            "type": "ChaosTarget",
+            "id": "/subscriptions/a22e5b40-a701-4b0e-b937-b43ed360039b/resourceGroups/MC_rg-dr-primary-eastus2_aks-dr-primary-eastus2_eastus2/providers/Microsoft.Compute/virtualMachineScaleSets/aks-system-34534534-vmss/providers/Microsoft.Chaos/targets/Microsoft-VirtualMachineScaleSet"
+          }
+        ]
+      }
+    ]
+  }
+}

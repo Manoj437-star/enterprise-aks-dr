@@ -1,0 +1,45 @@
+# Helm Values for Velero with Azure Plugin
+configuration:
+  provider: azure
+  backupStorageLocation:
+  - name: default
+    provider: azure
+    bucket: velero-backups
+    config:
+      resourceGroup: rg-dr-primary-eastus2
+      storageAccount: stdreastus2backup
+      subscriptionId: a22e5b40-a701-4b0e-b937-b43ed360039b
+  volumeSnapshotLocation:
+  - name: default
+    provider: azure
+    config:
+      resourceGroup: rg-dr-primary-eastus2
+      subscriptionId: a22e5b40-a701-4b0e-b937-b43ed360039b
+
+initContainers:
+  - name: velero-plugin-for-microsoft-azure
+    image: velero/velero-plugin-for-microsoft-azure:v1.10.0
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+
+credentials:
+  useSecret: true
+  name: velero-azure-credentials
+  secretContents:
+    cloud: |
+      AZURE_SUBSCRIPTION_ID=a22e5b40-a701-4b0e-b937-b43ed360039b
+      AZURE_TENANT_ID=f9f15163-3adf-4b3b-bba4-50a9236ac6f1
+      AZURE_BACKUP_RESOURCE_GROUP=rg-dr-primary-eastus2
+      AZURE_BACKUP_STORAGE_ACCOUNT_CLUSTER=stdreastus2backup
+      AZURE_STORAGE_KEY_ENV_VAR=AZURE_STORAGE_KEY
+
+schedules:
+  ecommerce-hourly:
+    schedule: "0 * * * *"
+    template:
+      includedNamespaces:
+      - ecommerce
+      snapshotVolumes: true
+      ttl: "720h"

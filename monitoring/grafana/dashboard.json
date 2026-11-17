@@ -1,0 +1,111 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 1,
+      "title": "Multi-Region Cluster Availability (East US 2 vs West US 3)",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "azuremonitor", "uid": "azure_monitor_datasource" },
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 1 },
+      "id": 2,
+      "title": "East US 2 Primary Cluster - Node Ready Count",
+      "type": "stat",
+      "targets": [
+        {
+          "azureMonitor": {
+            "query": "KubeNodeInventory | where ClusterName == 'aks-dr-primary-eastus2' and Status == 'Ready' | summarize ReadyNodes=count() by bin(TimeGenerated, 1m)"
+          }
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "azuremonitor", "uid": "azure_monitor_datasource" },
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 1 },
+      "id": 3,
+      "title": "West US 3 Secondary Cluster - Node Ready Count (Warm Standby)",
+      "type": "stat",
+      "targets": [
+        {
+          "azureMonitor": {
+            "query": "KubeNodeInventory | where ClusterName == 'aks-dr-secondary-westus3' and Status == 'Ready' | summarize ReadyNodes=count() by bin(TimeGenerated, 1m)"
+          }
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 7 },
+      "id": 4,
+      "title": "Application Workload & Pod Health",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "azuremonitor", "uid": "azure_monitor_datasource" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "id": 5,
+      "title": "Pod Restarts (CrashLoopBackOff Detection)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "azureMonitor": {
+            "query": "KubePodInventory | where Namespace == 'ecommerce' | summarize Restarts=max(PodRestartCount) by Name, bin(TimeGenerated, 5m)"
+          }
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "azuremonitor", "uid": "azure_monitor_datasource" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "id": 6,
+      "title": "PVC Storage Utilization (%)",
+      "type": "gauge",
+      "targets": [
+        {
+          "azureMonitor": {
+            "query": "InsightsMetrics | where Namespace == 'container.azm.ms/disk' and Name == 'used_percent' | summarize avg(Val) by bin(TimeGenerated, 5m)"
+          }
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 16 },
+      "id": 7,
+      "title": "Global Ingress Traffic & Failover Distribution",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "azuremonitor", "uid": "azure_monitor_datasource" },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 17 },
+      "id": 8,
+      "title": "Azure Front Door HTTP Ingress Request Count by Origin",
+      "type": "timeseries",
+      "targets": [
+        {
+          "azureMonitor": {
+            "query": "AzureDiagnostics | where ResourceProvider == 'MICROSOFT.CDN' and Category == 'FrontDoorAccessLog' | summarize RequestCount=count() by originName_s, bin(TimeGenerated, 1m)"
+          }
+        }
+      ]
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["aks", "disaster-recovery", "multi-region", "flux", "frontdoor"],
+  "time": { "from": "now-1h", "to": "now" },
+  "timezone": "browser",
+  "title": "Enterprise AKS Multi-Region Disaster Recovery Dashboard"
+}

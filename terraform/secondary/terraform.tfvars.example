@@ -1,0 +1,8 @@
+resource_group_name = "rg-dr-secondary-westus3"
+location            = "westus3"
+vnet_name           = "vnet-dr-secondary-westus3"
+cluster_name        = "aks-dr-secondary-westus3"
+vm_size             = "Standard_B2s"
+node_count          = 1
+# acr_id can be populated after primary is provisioned
+# acr_id = "/subscriptions/.../resourceGroups/rg-dr-primary-eastus2/providers/Microsoft.ContainerRegistry/registries/acrdreastus2poc"

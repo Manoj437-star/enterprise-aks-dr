@@ -1,0 +1,5 @@
+resource_group_name    = "rg-dr-global-traffic"
+location               = "eastus2"
+frontdoor_sku          = "Standard_AzureFrontDoor"
+primary_ingress_host   = "ecommerce-ingress-primary-eastus2.eastus2.cloudapp.azure.com"
+secondary_ingress_host = "ecommerce-ingress-secondary-westus3.westus3.cloudapp.azure.com"

@@ -1,0 +1,12 @@
+{
+  "name": "ecommerce-dr-app",
+  "version": "1.0.0",
+  "description": "Multi-Region Enterprise AKS Disaster Recovery Sample Application",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

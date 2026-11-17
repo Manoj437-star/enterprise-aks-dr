@@ -1,0 +1,45 @@
+{
+  "location": "eastus2",
+  "tags": {
+    "Environment": "POC",
+    "ChaosTarget": "AKS-Network"
+  },
+  "properties": {
+    "steps": [
+      {
+        "name": "Step1-InjectIngressLatency",
+        "branches": [
+          {
+            "name": "Branch1-NetworkDelay",
+            "actions": [
+              {
+                "type": "continuous",
+                "name": "urn:csci:microsoft:azureKubernetesServiceChaosMesh:networkChaos/2.1",
+                "duration": "PT5M",
+                "parameters": [
+                  {
+                    "key": "jsonSpec",
+                    "value": "{\"action\":\"delay\",\"mode\":\"all\",\"selector\":{\"namespaces\":[\"ingress-nginx\"]},\"delay\":{\"latency\":\"500ms\",\"jitter\":\"10ms\"}}"
+                  }
+                ],
+                "selectorId": "Selector-AKS-Cluster"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "selectors": [
+      {
+        "id": "Selector-AKS-Cluster",
+        "type": "List",
+        "targets": [
+          {
+            "type": "ChaosTarget",
+            "id": "/subscriptions/a22e5b40-a701-4b0e-b937-b43ed360039b/resourceGroups/rg-dr-primary-eastus2/providers/Microsoft.ContainerService/managedClusters/aks-dr-primary-eastus2/providers/Microsoft.Chaos/targets/Microsoft-AzureKubernetesServiceChaosMesh"
+          }
+        ]
+      }
+    ]
+  }
+}

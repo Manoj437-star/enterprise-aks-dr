@@ -1,0 +1,10 @@
+apiVersion: velero.io/v1
+kind: Restore
+metadata:
+  name: ecommerce-dr-restore
+  namespace: velero
+spec:
+  backupName: ecommerce-manual-backup
+  includedNamespaces:
+  - ecommerce
+  restorePVs: true

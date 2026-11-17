@@ -1,0 +1,10 @@
+resource_group_name  = "rg-dr-primary-eastus2"
+location             = "eastus2"
+vnet_name            = "vnet-dr-primary-eastus2"
+cluster_name         = "aks-dr-primary-eastus2"
+vm_size              = "Standard_B2s"
+node_count           = 1
+acr_name             = "acrdreastus2poc"
+acr_sku              = "Standard"
+storage_account_name = "stdreastus2backup"
+alert_email          = "manojdeep.jaiswal@gmail.com"
