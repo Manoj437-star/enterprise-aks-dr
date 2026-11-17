@@ -15,13 +15,22 @@ module "networking" {
   tags                = var.tags
 }
 
+module "monitoring" {
+  source              = "../modules/monitoring"
+  workspace_name      = "law-aks-dr-secondary"
+  resource_group_name = azurerm_resource_group.secondary.name
+  location            = azurerm_resource_group.secondary.location
+  alert_email         = var.alert_email
+  tags                = var.tags
+}
+
 resource "azurerm_public_ip" "secondary_ingress_ip" {
   name                = "pip-ingress-secondary-westus3"
   location            = azurerm_resource_group.secondary.location
   resource_group_name = azurerm_resource_group.secondary.name
   allocation_method   = "Static"
   sku                 = "Standard"
-  domain_name_label   = "ecommerce-ingress-secondary-${substr(md5(azurerm_resource_group.secondary.id), 0, 6)}"
+  domain_name_label   = "ecommerce-ingress-secondary-westus3"
   tags                = var.tags
 }
 
@@ -34,7 +43,8 @@ module "aks" {
   node_count                 = var.node_count
   vm_size                    = var.vm_size
   vnet_subnet_id             = module.networking.aks_subnet_id
-  log_analytics_workspace_id = var.log_analytics_workspace_id
+  log_analytics_workspace_id = module.monitoring.workspace_id
+  attach_acr                 = true
   acr_id                     = var.acr_id
   tags                       = var.tags
 }

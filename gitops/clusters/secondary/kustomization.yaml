@@ -19,3 +19,14 @@ patches:
       - op: replace
         path: /spec/replicas
         value: 1
+  - target:
+      kind: Service
+      name: ecommerce-service
+    patch: |-
+      - op: replace
+        path: /spec/type
+        value: LoadBalancer
+      - op: add
+        path: /metadata/annotations
+        value:
+          service.beta.kubernetes.io/azure-dns-label-name: "ecommerce-dr-secondary-westus3"

@@ -17,3 +17,8 @@ output "secondary_ingress_fqdn" {
   description = "Secondary Ingress FQDN"
   value       = azurerm_public_ip.secondary_ingress_ip.fqdn
 }
+
+output "log_analytics_workspace_id" {
+  description = "Secondary Log Analytics Workspace ID"
+  value       = module.monitoring.workspace_id
+}

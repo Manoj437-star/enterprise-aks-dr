@@ -24,8 +24,8 @@ variable "cluster_name" {
 
 variable "vm_size" {
   type        = string
-  description = "VM SKU for the worker nodes"
-  default     = "Standard_D2s_v6"
+  description = "VM SKU for the worker nodes (Standard_D2s_v4 selected due to West US 3 regional availability)"
+  default     = "Standard_D2s_v4"
 }
 
 variable "node_count" {
@@ -37,13 +37,13 @@ variable "node_count" {
 variable "acr_id" {
   type        = string
   description = "Resource ID of the shared ACR (from primary region outputs)"
-  default     = null
+  default     = "/subscriptions/634797e9-e825-4199-b9c1-40fc24dc3400/resourceGroups/rg-dr-primary-eastus2/providers/Microsoft.ContainerRegistry/registries/acrdreastus2poc"
 }
 
-variable "log_analytics_workspace_id" {
+variable "alert_email" {
   type        = string
-  description = "Log Analytics workspace ID for monitoring"
-  default     = null
+  description = "Email address for Azure Monitor alert notifications"
+  default     = "manojdeep.jaiswal@gmail.com"
 }
 
 variable "tags" {
