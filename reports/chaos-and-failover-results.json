@@ -1,0 +1,37 @@
+{
+  "test_title": "Enterprise AKS Simulated Traffic Failover & Chaos Engineering",
+  "timestamp": "2026-11-18 11:08:00",
+  "primary_endpoint": "http://localhost:8081",
+  "secondary_endpoint": "http://localhost:8082",
+  "traffic_controller_port": 8080,
+  "failover_rto_seconds": 17.42,
+  "rto_sla_met": true,
+  "failback_seconds": 3.08,
+  "total_failovers": 1,
+  "telemetry_state": {
+    "active_origin": "primary",
+    "primary_health": "HEALTHY",
+    "secondary_health": "HEALTHY",
+    "failover_count": 1,
+    "last_failover_time": "2026-11-18 11:07:47",
+    "last_failback_time": "2026-11-18 11:07:57",
+    "failover_duration_seconds": 4.0,
+    "consecutive_primary_failures": 0,
+    "consecutive_primary_successes": 3,
+    "history": [
+      {
+        "event": "FAILOVER",
+        "target": "secondary",
+        "time": "2026-11-18 11:07:47",
+        "failover_seconds": 4.0,
+        "reason": "Primary healthz probe failed"
+      },
+      {
+        "event": "FAILBACK",
+        "target": "primary",
+        "time": "2026-11-18 11:07:57",
+        "reason": "Primary healthz probe succeeded"
+      }
+    ]
+  }
+}

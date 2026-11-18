@@ -1,0 +1,27 @@
+{
+  "engine": "Velero Cross-Region Disaster Recovery",
+  "backup_name": "velero-ecommerce-20261118-053828",
+  "restore_name": "restore-velero-ecommerce-20261118-053828",
+  "source_region": "East US 2 (Primary)",
+  "destination_region": "West US 3 (Secondary)",
+  "storage_account": "stdreastus2backup (GRS)",
+  "backup_timestamp": "2026-11-18T05:38:28.114077+00:00",
+  "restore_completion": "2026-11-18T05:38:33.358770+00:00",
+  "measured_rpo_seconds": 5.24,
+  "rpo_sla_met": true,
+  "restore_duration_seconds": 2.63,
+  "restored_resources": [
+    "configmap-code.yaml",
+    "configmap.yaml",
+    "deployment.yaml",
+    "ingress.yaml",
+    "kustomization.yaml",
+    "namespace.yaml",
+    "service.yaml"
+  ],
+  "pvc_restoration": {
+    "pvc_name": "ecommerce-data-pvc",
+    "status": "Bound",
+    "capacity": "10Gi"
+  }
+}

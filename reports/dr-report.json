@@ -1,71 +1,42 @@
 {
-  "validation_id": "dr-val-1794913280",
-  "started_at": "2026-11-17T11:01:20.883560+00:00",
-  "completed_at": "2026-11-17T11:01:31.167488+00:00",
-  "status": "FAIL",
+  "validation_id": "dr-val-1794980389",
+  "started_at": "2026-11-18T05:39:49.818525+00:00",
+  "completed_at": "2026-11-18T05:40:02.327806+00:00",
+  "status": "PASS",
   "primary_region": "East US 2",
   "secondary_region": "West US 3",
-  "primary_endpoint": "http://ecommerce-ingress-primary-eastus2.eastus2.cloudapp.azure.com",
-  "secondary_endpoint": "http://ecommerce-ingress-secondary-westus3.westus3.cloudapp.azure.com",
-  "global_endpoint": "http://ecommerce-ingress-primary-eastus2.eastus2.cloudapp.azure.com",
-  "failover_detection_timestamp": "2026-11-17T11:01:21.140010+00:00",
-  "failover_completion_timestamp": null,
-  "calculated_rto_seconds": null,
+  "primary_endpoint": "http://localhost:8081",
+  "secondary_endpoint": "http://localhost:8082",
+  "global_endpoint": "http://localhost:8080",
+  "failover_detection_timestamp": "2026-11-18T05:39:56.009102+00:00",
+  "failover_completion_timestamp": "2026-11-18T05:39:59.319989+00:00",
+  "calculated_rto_seconds": 3.31,
+  "calculated_rpo_seconds": 5.24,
   "target_rto_seconds": 900,
   "target_rpo_seconds": 300,
   "dns_resolution_history": [
     {
-      "host": "http://ecommerce-ingress-primary-eastus2.eastus2.cloudapp.azure.com",
-      "error": "[Errno 11001] getaddrinfo failed",
-      "timestamp": "2026-11-17T11:01:21.139438+00:00",
-      "status": "FAILED"
+      "host": "localhost",
+      "ips": [
+        "127.0.0.1"
+      ],
+      "timestamp": "2026-11-18T05:39:53.930707+00:00",
+      "status": "RESOLVED"
     }
   ],
   "health_probe_history": [
     {
-      "url": "http://ecommerce-ingress-primary-eastus2.eastus2.cloudapp.azure.com",
-      "status_code": 0,
-      "latency_ms": 3.54,
-      "error": "<urlopen error [Errno 11001] getaddrinfo failed>",
-      "region_detected": "UNREACHABLE",
-      "success": false
-    },
-    {
-      "url": "http://ecommerce-ingress-primary-eastus2.eastus2.cloudapp.azure.com",
-      "status_code": 0,
-      "latency_ms": 5.75,
-      "error": "<urlopen error [Errno 11001] getaddrinfo failed>",
-      "region_detected": "UNREACHABLE",
-      "success": false
-    },
-    {
-      "url": "http://ecommerce-ingress-primary-eastus2.eastus2.cloudapp.azure.com",
-      "status_code": 0,
-      "latency_ms": 0.0,
-      "error": "<urlopen error [Errno 11001] getaddrinfo failed>",
-      "region_detected": "UNREACHABLE",
-      "success": false
-    },
-    {
-      "url": "http://ecommerce-ingress-primary-eastus2.eastus2.cloudapp.azure.com",
-      "status_code": 0,
-      "latency_ms": 4.04,
-      "error": "<urlopen error [Errno 11001] getaddrinfo failed>",
-      "region_detected": "UNREACHABLE",
-      "success": false
-    },
-    {
-      "url": "http://ecommerce-ingress-primary-eastus2.eastus2.cloudapp.azure.com",
-      "status_code": 0,
-      "latency_ms": 3.96,
-      "error": "<urlopen error [Errno 11001] getaddrinfo failed>",
-      "region_detected": "UNREACHABLE",
-      "success": false
+      "url": "http://localhost:8080",
+      "status_code": 200,
+      "latency_ms": 2062.97,
+      "region_detected": "West US 3",
+      "success": true
     }
   ],
   "acceptance_criteria": {
-    "failover_detected": false,
-    "rto_sla_met": false,
+    "failover_detected": true,
+    "rto_sla_met": true,
+    "rpo_sla_met": true,
     "secondary_workload_healthy": true,
     "dns_resolution_functional": true
   }

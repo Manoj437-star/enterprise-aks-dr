@@ -69,3 +69,41 @@ resource "azurerm_cdn_frontdoor_route" "route" {
   https_redirect_enabled = false
   link_to_default_domain = true
 }
+
+resource "azurerm_cdn_frontdoor_firewall_policy" "waf" {
+  count                             = var.enable_waf ? 1 : 0
+  name                              = var.waf_policy_name
+  resource_group_name               = var.resource_group_name
+  sku_name                          = var.sku_name
+  enabled                           = true
+  mode                              = "Prevention"
+  custom_block_response_status_code = 403
+  custom_block_response_body        = base64encode("Blocked by Global AKS DR WAF Policy")
+
+  managed_rule {
+    type    = "Microsoft_DefaultRuleSet"
+    version = "2.1"
+    action  = "Block"
+  }
+
+  tags = var.tags
+}
+
+resource "azurerm_cdn_frontdoor_security_policy" "security_policy" {
+  count                    = var.enable_waf ? 1 : 0
+  name                     = "sec-policy-global"
+  cdn_frontdoor_profile_id = azurerm_cdn_frontdoor_profile.profile.id
+
+  security_policies {
+    firewall {
+      cdn_frontdoor_firewall_policy_id = azurerm_cdn_frontdoor_firewall_policy.waf[0].id
+
+      association {
+        domain {
+          cdn_frontdoor_domain_id = azurerm_cdn_frontdoor_endpoint.endpoint.id
+        }
+        patterns_to_match = ["/*"]
+      }
+    }
+  }
+}
